@@ -2,7 +2,7 @@
 
 var platform = {};
 (function(){
-  
+
 const ee = eventEmitter();
 
 Object.assign(platform, ee);
@@ -176,7 +176,7 @@ platform.closeTabs = function closeTabs(tabs) {
 
 // TODO: use Firefox native favicon
 // see https://bugzilla.mozilla.org/show_bug.cgi?id=1315616
-platform.faviconPath = !window.netscape ? 
+platform.faviconPath = !window.netscape ?
   function faviconPath(url) {
     return 'chrome://favicon/' + url;
   } :
@@ -205,6 +205,10 @@ platform.openDashboard = () => {
   return browser.tabs.create({url: platform.extensionURL('dashboard.html')});
 }
 
+function isChrome() {
+  return typeof chrome !== 'undefined' && typeof chrome.runtime !== 'undefined';
+}
+
 platform.openTab = async ({link, openerTab, openerTabId = openerTab?.id, cookieStoreId, ...args}) => {
   if (isMobile() && link && !cookieStoreId) {
     // this allows users to return to the previous tab via backspace in kiwi browser
@@ -214,8 +218,14 @@ platform.openTab = async ({link, openerTab, openerTabId = openerTab?.id, cookieS
     link.target = oldTarget;
     return;
   }
-  
-  const options = {...args, cookieStoreId};
+
+  const options = { ...args };
+
+  // Only add cookieStoreId if it's not Chrome
+  if (cookieStoreId && !isChrome()) {
+    options.cookieStoreId = cookieStoreId;
+  }
+
   if (openerTabId && !/mobi.*firefox/i.test(navigator.userAgent)) {
     options.openerTabId = openerTabId;
   }
