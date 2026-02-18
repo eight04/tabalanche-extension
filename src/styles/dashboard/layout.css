@@ -1,3 +1,11 @@
+header {
+  background: url("/images/tabalanche-topper.svg") left no-repeat, #f8f8f8;
+  height: 90px;
+  padding-left: 175px;
+}
+#total-tabs {
+  display: none;
+}
 #searchbar {
   display: flex;
   margin: 36px 36px 0;
@@ -57,7 +65,20 @@ h3, h4 {
 
 @media (max-width: 480px) {
   header {
-    display: none;
+    height: auto;
+    padding: .4em .6em;
+    h1 {
+      font-size: 1em;
+    }
+    nav {
+      margin: 0;
+    }
+    ul {
+      gap: .6em;
+    }
+    li {
+      margin: 0;
+    }
   }
   #searchbar {
     margin: .8em .6em;
