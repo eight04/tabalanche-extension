@@ -3,11 +3,15 @@
 /* exported createSearchFilter, compileFilter */
 function compileFilter(value) {
   const rules = [];
+  const con = {};
   for (const term of value.split(/\s+/)) {
     let negative, rx;
     if (term.startsWith('-')) {
       negative = true;
       rx = term.slice(1);
+    } else if (term.startsWith("until:")) {
+      con.until = new Date(term.slice(6)).getTime();
+      continue;
     } else {
       negative = false;
       rx = term;
@@ -18,6 +22,7 @@ function compileFilter(value) {
     });
   }
   return {
+    ...con,
     toString: () => value,
     rules,
     test,

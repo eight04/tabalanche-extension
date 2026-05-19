@@ -11,6 +11,9 @@ export default [
       "dot-notation": 2,
       "max-statements-per-line": 2,
     },
+  },
+  {
+    files: ["src/**/*"],
     languageOptions: {
       globals: {
         ...globals.browser,
@@ -20,7 +23,7 @@ export default [
     },
   },
   {
-    files: ["test/**/*.js", "**/*.mjs"],
+    files: ["test/**/*", "tools/**/*"],
     languageOptions: {
       globals: {
         ...globals.node,

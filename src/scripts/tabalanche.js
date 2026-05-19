@@ -253,6 +253,10 @@ var tabalanche = eventEmitter();
       descending: true,
       limit: 5 // TODO: Make configurable or something
     };
+    
+    if (!startKey && filter && filter.until) {
+      startKey = [filter.until, ''];
+    }
 
     if (startKey) {
       queryOpts.startkey = startKey;

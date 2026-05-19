@@ -1,4 +1,3 @@
-/* eslint-env webextensions */
 /* global platform cre */
 /* global createSearchFilter createInfiniteLoader */
 
