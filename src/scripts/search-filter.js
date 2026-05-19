@@ -77,7 +77,10 @@ function createSearchFilter({
     ...events,
     testObj: obj => filter.testObj(obj, props),
     toString: () => filter.toString(),
-    empty: () => !filter.rules.length
+    empty: () => !filter.rules.length,
+    get until() {
+      return filter.until;
+    }
   };
   
   function updateValue() {

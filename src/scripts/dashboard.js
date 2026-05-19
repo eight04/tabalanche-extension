@@ -192,6 +192,9 @@ function createTabGroupDiv(tabGroupDoc) {
 
 async function addTabGroup(id) {
   const doc = await browser.runtime.sendMessage({method: "get-tab-group", id});
+  if (searchFilter.until && doc.created > searchFilter.until) {
+    return;
+  }
   if (doc.tabs.some(t => searchFilter.testObj(t))) {
     await loader.add(doc);
     if (!loader.items.length) {
