@@ -233,11 +233,16 @@ platform.extensionURL = function extensionURL(path) {
 };
 
 platform.getOptionsURL = function getOptionsURL() {
+  if (isFirefox() || isEdge()) {
+    return browser.runtime.getURL('chrome/options.html');
+  }
   // TODO: Review newer options UI paradigm and revise this
   return 'chrome://extensions/?options=' + browser.runtime.id;
 };
 
-platform.openOptionsPage = browser.runtime.openOptionsPage;
+// FIXME: openOptionsPage does nothing on edge mobile.
+platform.openOptionsPage = isMobile() && isEdge() ?
+  null : browser.runtime.openOptionsPage.bind(browser.runtime);
 
 platform.openDashboard = () => {
   return browser.tabs.create({url: platform.extensionURL('dashboard.html')});

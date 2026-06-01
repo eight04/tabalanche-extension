@@ -209,10 +209,12 @@ var optslink = document.getElementById('options');
 optslink.href = platform.getOptionsURL();
 
 // Perform platform-specific options opening on click anyway
-optslink.addEventListener('click', function(evt) {
-  platform.openOptionsPage();
-  evt.preventDefault();
-});
+if (platform.openOptionsPage) {
+  optslink.addEventListener('click', function(evt) {
+    platform.openOptionsPage();
+    evt.preventDefault();
+  });
+}
 
 const HANDLE_EVENT = {
   "new-tab-group": e => {
