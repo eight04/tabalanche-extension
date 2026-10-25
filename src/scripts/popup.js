@@ -111,7 +111,7 @@ function createTabDiv(tab) {
   async function loadSnapshot() {
     let src;
     try {
-      src = await browser.tabs.captureTab(tab.id);
+      src = await browser.tabs.captureTab(tab.id, {scale: 0.25});
     } catch (err) {
       console.error(err);
       console.error(`failed capturing tab: ${tab.id}`);
