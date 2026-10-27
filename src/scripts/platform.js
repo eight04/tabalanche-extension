@@ -12,12 +12,14 @@ var optionDefaults = {
   ignoreDuplicatedUrls: false,
   serverUrl: '',
   useSnapshotUI: isMobile(),
-  useScreenshot: false
+  useScreenshot: false,
+  selectActiveTab: false
 };
 
 const localOptions = [
   'useSnapshotUI',
-  'useScreenshot'
+  'useScreenshot',
+  'selectActiveTab'
 ];
 
 function isMobile() {

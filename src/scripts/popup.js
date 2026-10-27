@@ -58,14 +58,31 @@ async function initSnapshotUI() {
       tab.toggle();
     }
   });
-  
-  if (opts.useScreenshot && await platform.hasScreenshotPermission()) {
-    for (const tab of tabs) {
-      await tab.loadSnapshot();
+
+  const shouldLoadSnapshot = async () => opts.useScreenshot && await platform.hasScreenshotPermission();
+  shouldLoadSnapshot().then(load => {
+    if (load) {
+      for (const tab of tabs) {
+        tab.loadSnapshot();
+      }
+    } else {
+      document.body.classList.add('snapshot-ui-no-snapshot');
     }
-  } else {
-    document.body.classList.add('snapshot-ui-no-snapshot');
-  }
+  }).catch(console.error);
+
+  getActiveTab().then(tab => {
+    if (!tab) {
+      return;
+    }
+    const activeTab = tabs.find(t => t.tab.id === tab.id);
+    if (activeTab) {
+      if (opts.selectActiveTab) {
+        activeTab.toggle(true);
+      }
+      activeTab.el.scrollIntoView({block: 'center'});
+      activeTab.el.classList.add('active-tab');
+    }
+  }).catch(console.error);
 
   // FIXME: we have to catch popstate event to close the tab on FF android
   // FIXME: this no longer works anymore
@@ -111,6 +128,8 @@ function createTabDiv(tab) {
   async function loadSnapshot() {
     let src;
     try {
+      // FIXME: https://bugzilla.mozilla.org/show_bug.cgi?id=1940396
+      // this won't work with video page e.g. youtube on android.
       src = await browser.tabs.captureTab(tab.id, {scale: 0.25});
     } catch (err) {
       console.error(err);
@@ -119,4 +138,14 @@ function createTabDiv(tab) {
     }
     container.querySelector('.tab-snapshot').src = src;
   }
+}
+
+async function getActiveTab() {
+  const [activeTab] = await browser.tabs.query({active: true, currentWindow: true});
+  const currentTab = await browser.tabs.getCurrent();
+  if (currentTab && currentTab.id === activeTab.id && activeTab.openerTabId) {
+    const openerTab = await browser.tabs.get(activeTab.openerTabId);
+    return openerTab;
+  }
+  return activeTab;
 }
