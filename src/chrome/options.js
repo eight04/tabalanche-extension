@@ -146,6 +146,7 @@ async function exportTabs() {
   const a = document.createElement("a");
   lastUrl = a.href = URL.createObjectURL(file);
   a.download = file.name;
+  // FIXME: this doesn't seem to work with large file (50MB)
   a.click();
   exportStatus.textContent = "Done";
 }

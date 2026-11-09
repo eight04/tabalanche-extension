@@ -162,8 +162,12 @@ var tabalanche = eventEmitter();
   };
 
   tabalanche.importTabGroups = async docs => {
+    if (!docs.length) {
+      throw new Error("No tab groups to import");
+    }
     await tabgroupsReady;
-    const newDocs = docs.filter(d => !d._id);
+    // NOTE: backward compaitibility: if some docs have _id but no _rev, we treat them as new docs
+    const newDocs = docs.filter(d => !d._id || !d._rev);
     if (newDocs.length && newDocs.length < docs.length) {
       throw new Error("Some documents donnot have correct _id");
     }
