@@ -85,10 +85,12 @@ if (browser.windows) {
 platform.getWindowTabs = {};
 
 async function getOptions() {
+  console.log("getting options");
   const [syncOpts, localOpts] = await Promise.all([
     browser.storage.sync.get(optionDefaults),
     browser.storage.local.get(localOptions)
   ]);
+  console.log("gettting options", syncOpts, localOpts);
   return Object.assign(syncOpts, localOpts);
 }
 
