@@ -133,21 +133,24 @@ async function importTabs() {
   importStatus.textContent = "Done";
 }
 
-let lastUrl = "";
+const exportLink = document.querySelector("#export-link");
 async function exportTabs() {
   exportStatus.textContent = "Processing...";
-  URL.revokeObjectURL(lastUrl);
+  if (exportLink.hasAttribute("href")) {
+    URL.revokeObjectURL(exportLink.href);
+  }
   const text = await browser.runtime.sendMessage({
     method: "export-tabs"
   });
-  const file = new File([text], "tabalanche-export.json", {
+  const filename = `tabalanche-export-${Temporal.Now.plainDateISO()}.json`;
+  const file = new File([text], filename, {
     type: "application/json",
   });
-  const a = document.createElement("a");
-  lastUrl = a.href = URL.createObjectURL(file);
-  a.download = file.name;
+  exportLink.href = URL.createObjectURL(file);
+  exportLink.download = filename;
+  exportLink.textContent = filename;
   // FIXME: this doesn't seem to work with large file (50MB)
-  a.click();
+  exportLink.click();
   exportStatus.textContent = "Done";
 }
 
